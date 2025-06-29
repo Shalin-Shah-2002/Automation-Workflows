@@ -1,0 +1,91 @@
+{
+  "name": "TNP cell Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "includeSpamTrash": true,
+          "sender": "tnp@charusat.ac.in"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -460,
+        -200
+      ],
+      "id": "ba6bcbe9-f126-4185-9bd5-26d7b6045e2a",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Ac3pxzzov8bWrHn9",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ntfy.sh/tnp-alerts-shalin",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Title",
+              "value": "New TNP Email"
+            },
+            {
+              "name": "Priority",
+              "value": "high"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "text/plain",
+        "body": "📩 New Email: Subject: Dear Students, Greetings from TNP Cell",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        -200
+      ],
+      "id": "ce7c069c-0511-45f2-b5c3-bf502255f7de",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d58c1c2b-ec65-4253-bcb7-867d2f256da2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4a01536977db53ab78956c62fa5ccb69c4a615c2f3f31bb7b891408cc5b36313"
+  },
+  "id": "pDdRvnjGbYdTT04Q",
+  "tags": []
+}
