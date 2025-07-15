@@ -1,0 +1,625 @@
+{
+  "name": "Job-Finding Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "triggerAtMinute": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3261319f-9675-4603-971c-ab1182b53c26",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://api.apify.com/v2/datasets/1bu1fmqFbFNbWZJmN/items?token=apify_api_HIKK9AtYKgwte2CkjuFHBOCib1Zz6c3DSA3l",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "674a13d8-2db1-4c81-8bd5-818ad9dfde7c",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "64d16c83-ea12-4150-957c-24389c7081be",
+              "leftValue": "={{ $json.job_title }}",
+              "rightValue": "Flutter",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "396210e0-1f9c-4396-9f1d-63b95ead4e7f",
+              "leftValue": "={{ $json.job_title }}",
+              "rightValue": "Flutter Developer",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "80764622-a642-4cf9-85e7-f4da2f0b5dc9",
+              "leftValue": "={{ $json.job_title }}",
+              "rightValue": "Flutter Developer Fresher",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "9868785b-d1ed-492f-a723-13d33918feb5",
+              "leftValue": "={{ $json.job_title }}",
+              "rightValue": "MERN Stack",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "d220f6dc-f774-49f3-b6b3-861edcb42119",
+              "leftValue": "={{ $json.job_title }}",
+              "rightValue": "Node Js Developer",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "88074d3d-011a-4f85-a9f0-c6526a68464b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1zwhz5R_Otihk7FOUjLVbYZ-D-v-AVH3dCiM1r0c4qvk",
+          "mode": "list",
+          "cachedResultName": "Automation Jobs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zwhz5R_Otihk7FOUjLVbYZ-D-v-AVH3dCiM1r0c4qvk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zwhz5R_Otihk7FOUjLVbYZ-D-v-AVH3dCiM1r0c4qvk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Job Title ": "={{ $json.job_title }}",
+            "Job Link": "={{ $json.job_url }}",
+            "Company": "={{ $json.company_name }}",
+            "Location": "={{ $json.location }}",
+            "Date Posted": "={{ $('Schedule Trigger').item.json['Readable date'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Job Title ",
+              "displayName": "Job Title ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Job Link",
+              "displayName": "Job Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Posted",
+              "displayName": "Date Posted",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        656,
+        -128
+      ],
+      "id": "768a4cb1-faab-4d79-99f1-c324b86e70ce",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oYfgBI41INj6bklI",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ntfy.sh/flutter-jobs",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "text/plain",
+        "body": "Cant Find Flutter Jobs or Any other Jobs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        656,
+        128
+      ],
+      "id": "a2d25ddf-72cb-4341-a5ec-a8371eaf6375",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ntfy.sh/flutter-jobs",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "text/plain",
+        "body": "Found it !!!!✔️✔️ just do check out the google sheets  ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        832,
+        -128
+      ],
+      "id": "dea12f1f-a4f0-45ac-b396-40ef9972b468",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "triggerAtMinute": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        512
+      ],
+      "id": "71d18f9d-3612-4e3d-85bd-6babd2adb7d1",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "url": "https://api.apify.com/v2/datasets/08eOHOajBDuIjU2FB/items?token=apify_api_HIKK9AtYKgwte2CkjuFHBOCib1Zz6c3DSA3l",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        512
+      ],
+      "id": "18e0bc63-bb79-4d9e-a41c-a6601ee5475b",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "64d16c83-ea12-4150-957c-24389c7081be",
+              "leftValue": "={{ $json.job_title }}",
+              "rightValue": "Flutter",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "396210e0-1f9c-4396-9f1d-63b95ead4e7f",
+              "leftValue": "={{ $json.job_title }}",
+              "rightValue": "Full Stack",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "80764622-a642-4cf9-85e7-f4da2f0b5dc9",
+              "leftValue": "={{ $json.job_title }}",
+              "rightValue": "Full Stack Developer",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "9868785b-d1ed-492f-a723-13d33918feb5",
+              "leftValue": "={{ $json.job_title }}",
+              "rightValue": ".NET",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "d220f6dc-f774-49f3-b6b3-861edcb42119",
+              "leftValue": "={{ $json.job_title }}",
+              "rightValue": "Software Development",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "3e840b34-a63f-4adf-bc55-d870cab247f8",
+              "leftValue": "={{ $json.job_title }}",
+              "rightValue": "Node js ",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "d26467c3-15fa-487e-b706-3b9bfbd675af",
+              "leftValue": "={{ $json.job_title }}",
+              "rightValue": "Intern",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        512
+      ],
+      "id": "947ccf91-d45f-4757-9c1c-a3a24961bbcd",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1zwhz5R_Otihk7FOUjLVbYZ-D-v-AVH3dCiM1r0c4qvk",
+          "mode": "list",
+          "cachedResultName": "Automation Jobs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zwhz5R_Otihk7FOUjLVbYZ-D-v-AVH3dCiM1r0c4qvk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zwhz5R_Otihk7FOUjLVbYZ-D-v-AVH3dCiM1r0c4qvk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Job Title ": "={{ $json.job_title }}",
+            "Job Link": "={{ $json.job_url }}",
+            "Company": "={{ $json.company_name }}",
+            "Location": "={{ $json.location }}",
+            "Date Posted": "={{ $('Schedule Trigger1').item.json['Readable date'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Job Title ",
+              "displayName": "Job Title ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Job Link",
+              "displayName": "Job Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Posted",
+              "displayName": "Date Posted",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        656,
+        384
+      ],
+      "id": "5d6431e2-ba81-4c30-b894-fdea29a169c6",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oYfgBI41INj6bklI",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ntfy.sh/flutter-jobs",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "text/plain",
+        "body": "Cant Find Flutter Jobs or Any other Jobs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        656,
+        640
+      ],
+      "id": "b3d0b1e7-24fb-43f1-b9e0-c2576840f966",
+      "name": "HTTP Request4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ntfy.sh/flutter-jobs",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "text/plain",
+        "body": "Found it !!!!✔️✔️ just do check out the google sheets  ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        832,
+        384
+      ],
+      "id": "cad7a49e-5eb8-4308-b9db-d2b4da179d66",
+      "name": "HTTP Request5"
+    },
+    {
+      "parameters": {
+        "content": "## I'm a note \n",
+        "height": 80
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        496
+      ],
+      "typeVersion": 1,
+      "id": "9f6b1e27-f3c3-4dbc-8217-3bc64067730a",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ea475302-639a-4b8b-9db3-7b50b8525b16",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b61b28a9870298b87b6c13fa1a1b19dda24a1da97b55bfa2774f941789b89b75"
+  },
+  "id": "SLBVOEtiWkZ4XoxG",
+  "tags": []
+}
