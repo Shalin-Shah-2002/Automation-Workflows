@@ -23,7 +23,7 @@
     },
     {
       "parameters": {
-        "url": "https://api.apify.com/v2/datasets/ZR1iSKI3DcWLWwZfN/items?token=apify_api_HIKK9AtYKgwte2CkjuFHBOCib1Zz6c3DSA3l",
+        "url": "https://api.apify.com/v2/datasets/ZR1iSKI3DcWLWwZfN/items?token=apify_api_HIKK9AtYKgwte2CkjuFHBib1Zz6c3DSA3l",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
