@@ -1,0 +1,617 @@
+{
+  "name": "Synapse",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "to:2002shalin@gmail.com has:attachment subject:(\"resume\" OR \"CV\" OR \"application\" OR \"applying for\")"
+        },
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        832,
+        96
+      ],
+      "id": "d5e2dfcc-6346-4947-a742-a565f4d98f2a",
+      "name": "Gmail Trigger",
+      "notesInFlow": false,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XYZJZMNIipDOR4Lk",
+          "name": "n8N GMAIL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCjMxqWIBNepZFqjMnVJ1rlEhC0AE-B71U",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"Analyze the attached resume. Extract the following information in a valid JSON object: \\\"candidateName\\\", \\\"emailAddress\\\", \\\"phoneNumber\\\", \\\"skills\\\" (as an array of the top 5-7 most relevant skills) and \\\"summary\\\" (a 3-sentence professional summary of their experience). If a field is not found, use 'N/A'. Respond ONLY with the JSON object.\"\n        },\n        {\n          \"inlineData\": {\n            \"mimeType\": \"{{ $('Gmail Trigger').first().binary.attachment_0.mimeType }}\",\n            \"data\": \"{{ $('Gmail Trigger').first().binary.attachment_0.data }}\"\n          }\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1568,
+        -48
+      ],
+      "id": "c23ffdce-9806-45fb-b8fe-d0657aadfdd5",
+      "name": "Resume Analyzer"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1S_EZn1PJByVKGTu5TqPUws_pERAZI0kTQTu76iwqHi8",
+          "mode": "list",
+          "cachedResultName": "create a automation for human resorce jujst like...",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1S_EZn1PJByVKGTu5TqPUws_pERAZI0kTQTu76iwqHi8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 292977499,
+          "mode": "list",
+          "cachedResultName": "create a automation for human resorce jujst like...",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1S_EZn1PJByVKGTu5TqPUws_pERAZI0kTQTu76iwqHi8/edit#gid=292977499"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date Received": "={{ $('Gmail Trigger').first().json.date }}",
+            "Candidate Name": "={{ $('Clean JSON Code').item.json.candidateName }}",
+            "Email": "={{ $('Clean JSON Code').item.json.emailAddress }}",
+            "Phone": "={{ $('Clean JSON Code').item.json.phoneNumber }}",
+            "Key Skills": "={{ $('Clean JSON Code').item.json.skills }}",
+            "AI Summary": "={{ $('Clean JSON Code').item.json.summary }}",
+            "Applied For": "={{ $('Gmail Trigger').first().json.headers.subject }}",
+            "matchScore": "={{ $json.matchScore }}",
+            "justification": "={{ $json.justification }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date Received",
+              "displayName": "Date Received",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Candidate Name",
+              "displayName": "Candidate Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Applied For",
+              "displayName": "Applied For",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Key Skills",
+              "displayName": "Key Skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Summary",
+              "displayName": "AI Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "matchScore",
+              "displayName": "matchScore",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "justification",
+              "displayName": "justification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        2480,
+        -160
+      ],
+      "id": "04c92197-6787-4fa8-882c-f7a66e200ece",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BICNjUvkxYpKr1Ya",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ntfy.sh/Applicants",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Title ",
+              "value": "=New Application: {{ $('Clean JSON Code').item.json.candidateName }}"
+            },
+            {
+              "name": "Priority",
+              "value": "High"
+            },
+            {
+              "name": "Tags",
+              "value": "briefcase"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "Text",
+        "body": "=Applied For: {{ $('Gmail Trigger').first().json.subject }}\n\nDetails and AI summary added.\n\n[Click here to open the Applicant Tracker] https://docs.google.com/spreadsheets/d/1S_EZn1PJByVKGTu5TqPUws_pERAZI0kTQTu76iwqHi8/edit?gid=292977499#gid=292977499",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2656,
+        -160
+      ],
+      "id": "010ceeb8-ce02-44a7-8a4c-5d55649ca135",
+      "name": "Notify"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the subject line from the Gmail trigger\nconst subject = $('Gmail Trigger').first().json.subject;\n\n// Use a regular expression to find the role after the word \"for\"\n// This is flexible and handles subjects like \"Application for Flutter Developer Position\"\nconst match = subject.match(/for\\s(.*?)(?:\\sPosition)?$/i);\n\n// If a role is found in the subject, use it. \n// Otherwise, set a default to prevent errors.\nconst role = match && match[1] ? match[1].trim() : \"Flutter Developer\";\n\n// Return the extracted role for the next node to use\nreturn {\n  extractedRole: role\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1008,
+        96
+      ],
+      "id": "3baa688b-a9d7-4a82-bbb8-cd9c668a9aae",
+      "name": "Extract Role from Subject"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCjMxqWIBNepZFqjMnVJ1rlEhC0AE-B71U",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"You are an intelligent HR assistant responsible for data normalization. Your task is to correct and match a job title from a candidate's email to an official job title from our company's list.\\n\\n## INSTRUCTIONS:\\n1. Compare the CANDIDATE_TITLE with the OFFICIAL_TITLES list.\\n2. Account for common spelling mistakes, typos, or variations (e.g., 'Fluter devloper' should match 'Flutter Developer').\\n3. Your response must be ONLY the single, correctly spelled string from the OFFICIAL_TITLES list that is the best match.\\n4. If the CANDIDATE_TITLE is completely unrelated, respond with the exact string 'No Match Found'.\\n\\n## EXAMPLES:\\n\\n---\\n**Example 1:**\\nCANDIDATE_TITLE: \\\"Aplication for a sr nodejs dev\\\"\\nOFFICIAL_TITLES: ['Flutter Developer', 'Node.js Developer', 'Project Manager']\\nCORRECT_RESPONSE: Node.js Developer\\n---\\n**Example 2:**\\nCANDIDATE_TITLE: \\\"Inquiry about your invoices\\\"\\nOFFICIAL_TITLES: ['Flutter Developer', 'Node.js Developer', 'Project Manager']\\nCORRECT_RESPONSE: No Match Found\\n---\\n\\n## TASK:\\n\\nCANDIDATE_TITLE: \\\"{{ $('Extract Role from Subject').first().json.extractedRole }}\\\"\\nOFFICIAL_TITLES: [{{ $('Format Roles List').first().json.roleListString }}]\\nCORRECT_RESPONSE:\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1408,
+        -48
+      ],
+      "id": "54c16f93-e397-47d2-a354-a396f1b6659d",
+      "name": "AI Role Matcher"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1S_EZn1PJByVKGTu5TqPUws_pERAZI0kTQTu76iwqHi8",
+          "mode": "list",
+          "cachedResultName": "create a automation for human resorce jujst like...",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1S_EZn1PJByVKGTu5TqPUws_pERAZI0kTQTu76iwqHi8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1279097353,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1S_EZn1PJByVKGTu5TqPUws_pERAZI0kTQTu76iwqHi8/edit#gid=1279097353"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1200,
+        96
+      ],
+      "id": "b9a0a739-034c-4a23-ba1f-60785e203dbb",
+      "name": "Get Job Profile",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "BICNjUvkxYpKr1Ya",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the AI's response from the node connected to the input\nconst rawText = $input.first().json.candidates[0].content.parts[0].text;\n\n// Remove the markdown wrapper (```json ... ```)\nconst cleanedText = rawText.replace(/```json\\n|\\n```/g, '');\n\n// Parse the cleaned string into a real JSON object\nconst jsonData = JSON.parse(cleanedText);\n\n// Return the clean JSON object for the next node\nreturn jsonData;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1728,
+        -48
+      ],
+      "id": "d7b19410-0fa3-4331-8830-9d1b29b57ed3",
+      "name": "Clean JSON Code"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Use the .all() function to get the full array of items from the previous node\nconst items = $('Get Job Profile').all();\n\n// The rest of the code will now work because 'items' is a proper array\nconst roles = items\n  .filter(item => item.json.RoleName)\n  .map(item => `'${item.json.RoleName}'`);\n  \n// Join them into a single string like: 'Flutter Developer', 'QA'\nconst roleListString = roles.join(', ');\n\n// Return this final string\nreturn { roleListString: roleListString };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1408,
+        144
+      ],
+      "id": "2abe6f95-942d-4b10-b21d-09fabebaad47",
+      "name": "Format Roles List"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the corrected role name from the AI\nconst correctedRole = $('AI Role Matcher').first().json.candidates[0].content.parts[0].text.trim();\n\n// Get the full list of all profiles we fetched earlier\nconst allProfiles = $('Get Job Profile').all();\n\n// Find the specific profile object that matches the corrected role name\nconst correctProfile = allProfiles.find(profile => profile.json.RoleName.trim() === correctedRole);\n\n// IMPORTANT: Check if a profile was actually found\nif (correctProfile) {\n  // If a match was found, return its data for the next steps.\n  return correctProfile.json;\n} else {\n  // If no match was found (e.g., AI returned 'No Match Found' or the role doesn't exist),\n  // return an empty array. This gracefully stops this specific workflow run without causing an error.\n  return [];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        144
+      ],
+      "id": "2b566b22-2dc1-4ee0-9fb0-560e3139f56a",
+      "name": "Find Correct Profile"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCjMxqWIBNepZFqjMnVJ1rlEhC0AE-B71U",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"You are an expert technical recruiter for a software company. Your task is to analyze a candidate's details against a specific job's requirements and provide a quantitative and qualitative analysis.\\n\\n## INSTRUCTIONS:\\n1. Carefully read the candidate's summary and their list of skills.\\n2. Compare this information against the required and nice-to-have skills for the job.\\n3. Consider not just exact keyword matches, but also related technologies and the context of their experience described in the summary. For example, if they mention building 'cross-platform apps', that is strong evidence for 'Flutter'.\\n4. Based on your expert analysis, provide a `matchScore` between 0 and 100.\\n5. Provide a brief, one-sentence `justification` explaining your score.\\n6. Your response MUST be a valid JSON object with ONLY two keys: \\\"matchScore\\\" (a number) and \\\"justification\\\" (a string).\\n\\n## CANDIDATE DETAILS:\\n**Summary:** {{ $('Clean JSON Code').first().json.summary }}\\n**Skills:** {{ $('Clean JSON Code').first().json.skills.join(', ') }}\\n\\n## JOB REQUIREMENTS:\\n**Required Skills:** {{ $('Find Correct Profile').first().json.RequiredSkills }}\\n**Nice-to-Have Skills:** {{ $('Find Correct Profile').first().json.NiceToHaveSkills }}\\n\\n## ANALYSIS:\\n\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        144
+      ],
+      "id": "1cee4d62-6fd4-4ab5-a261-4844e15994ae",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e7ee7e71-08b8-49c5-ace0-df8ca7282bf9",
+              "leftValue": "={{ $('Clean Score').item.json.matchScore }}",
+              "rightValue": 75,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2080,
+        -64
+      ],
+      "id": "2798ec35-7d8d-4589-baad-5ef75a029abb",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawText = $input.item.json.candidates[0].content.parts[0].text;\nconst cleanedText = rawText.replace(/```json\\n|\\n```/g, '');\nconst jsonData = JSON.parse(cleanedText);\nreturn jsonData;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2064,
+        144
+      ],
+      "id": "660ce77b-6982-47cd-979d-4c38f1e82fe3",
+      "name": "Clean Score"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Gmail Trigger').first().json.from.value[0].address }}",
+        "subject": "=Update on your application for the {{ $('Extract Role from Subject').first().json.extractedRole }} position",
+        "message": "=Dear {{ $('Clean JSON Code').first().json.candidateName }},  Thank you for your interest in the {{ $('Extract Role from Subject').first().json.extractedRole }} position.  We are pleased to inform you that your profile has been reviewed and shortlisted for further consideration. Our recruitment team has received your details and may contact you in the coming days if your profile is selected for the next steps.  We appreciate your patience during this process.  Sincerely, The [Your Company Name] HR Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2304,
+        -160
+      ],
+      "id": "ee788b64-3860-4fc7-8aec-070c16ae455d",
+      "name": "Send a message",
+      "webhookId": "d65739af-94ed-4ff9-b4af-b450b017e197",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XYZJZMNIipDOR4Lk",
+          "name": "n8N GMAIL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Gmail Trigger').first().json.from.value[0].address }}",
+        "subject": "An update on your application with [Your Company Name]",
+        "message": "=Dear {{ $('Code1').first().json.candidateName }},  Thank you for your interest and for taking the time to apply for the {{ $('Extract Role from Subject').first().json.extractedRole }} position.  We receive a high volume of applications, and our initial review process helps us match profiles to the specific needs of the position. After this review, we have decided to move forward with other candidates whose experience more closely aligns with the core requirements for this role at this time.  To strengthen your application for future opportunities, we suggest further highlighting projects and skills that directly align with the primary qualifications listed in a job description. This helps automated systems and recruiters quickly see the value you can bring.  We truly appreciate your interest in our company and will keep your resume on file for any future openings that may be a better fit.  We wish you the very best in your job search.  Sincerely, The [Your Company Name] HR Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2304,
+        16
+      ],
+      "id": "45240c9c-5811-46d7-a44d-9386399cb3a6",
+      "name": "Send a message1",
+      "webhookId": "3546d52b-7b46-421d-aaec-3bebe675025b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XYZJZMNIipDOR4Lk",
+          "name": "n8N GMAIL"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract Role from Subject",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resume Analyzer": {
+      "main": [
+        [
+          {
+            "node": "Clean JSON Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Notify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify": {
+      "main": [
+        []
+      ]
+    },
+    "Extract Role from Subject": {
+      "main": [
+        [
+          {
+            "node": "Get Job Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Role Matcher": {
+      "main": [
+        [
+          {
+            "node": "Resume Analyzer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Job Profile": {
+      "main": [
+        [
+          {
+            "node": "Format Roles List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean JSON Code": {
+      "main": [
+        [
+          {
+            "node": "Find Correct Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Roles List": {
+      "main": [
+        [
+          {
+            "node": "AI Role Matcher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Correct Profile": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Clean Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Score": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0c7c6ba2-107e-47ba-95c2-70aa484029c7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2696bd1fe2c6027f3e7c68d16d47ce408f61764f66dc6930166a2260d22062a6"
+  },
+  "id": "UeMsc3ewueS3nojK",
+  "tags": [
+    {
+      "name": "AI Powered",
+      "id": "Xmi2qYGOhUwxSOkM",
+      "createdAt": "2025-08-19T09:10:12.631Z",
+      "updatedAt": "2025-08-19T09:10:12.631Z"
+    }
+  ]
+}
