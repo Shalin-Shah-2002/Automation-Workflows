@@ -1,0 +1,185 @@
+{
+  "name": "WritePal",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        128,
+        48
+      ],
+      "id": "39243b6e-cad2-4ec9-ad16-68993ecd59e8",
+      "name": "Telegram Trigger",
+      "webhookId": "ffdfe1b7-b5f4-4677-b74b-35fee48a39a2",
+      "credentials": {
+        "telegramApi": {
+          "id": "6DGyYLJ9hpJb8vFA",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        448,
+        256
+      ],
+      "id": "820b98e1-c176-4df8-8ae3-2a4323662556",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "v0On2452HojiDH0H",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a professional writing assistant. Your task is to draft messages or emails based on user requests. The user will specify if the tone should be formal or informal. If they don't specify, use a neutral professional tone. Do not add any introductory or concluding remarks of your own; just provide the requested message or email text. "
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        416,
+        48
+      ],
+      "id": "2c8bcfda-b7c9-4b95-80c6-220321ce9a38",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.text }}",
+        "replyMarkup": "forceReply",
+        "forceReply": {},
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        48
+      ],
+      "id": "68f23888-ab2e-44d4-ab0d-788e4100a48d",
+      "name": "Send a text message",
+      "webhookId": "4eedf235-a8f9-4a70-a83e-34d9aad178f5",
+      "credentials": {
+        "telegramApi": {
+          "id": "6DGyYLJ9hpJb8vFA",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "\n\n#### 1\\. Telegram Trigger Node\n\nThis node is already configured from your initial setup.\n\n  * **Node Name:** `Telegram Trigger`\n  * **Credentials:** Your Telegram Account credential.\n  * **Parameters:**\n      * `Trigger On`: `Message`\n\n\n\n\n\n",
+        "height": 240,
+        "width": 544
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        -352
+      ],
+      "id": "c2e1898d-22a6-41d9-ba55-be170da223b8",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "#### 2\\. Basic LLM Chain Node\n\nThis is the central node that uses Gemini to process the user's message.\n\n  * **Node Name:** `Basic LLM Chain`\n  * **Input Data:** `{{ $json.text }}`\n  * **Model:** `Google Gemini Chat Model`\n  * **System Prompt:**\n    ```\n    You are a professional writing assistant. Your task is to draft messages or emails based on user requests. The user will specify if the tone should be formal or informal. If they don't specify, use a neutral professional tone. Do not add any introductory or concluding remarks of your own; just provide the requested message or email text.\n    ```\n  * **Model Parameters:** Ensure your Google Gemini Chat Model node has the correct credentials and `gemini-pro` model selected.",
+        "height": 336,
+        "width": 560
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        400,
+        -352
+      ],
+      "id": "cf0f029c-c126-49ec-b18e-abd8e1c7c335",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "\n#### 3\\. Telegram Send Message Node\n\nThis final node sends the response back to the user.\n\n  * **Node Name:** `Send a text message`\n  * **Credentials:** Your Telegram Account credential.\n  * **Parameters:**\n      * `Resource`: `Message`\n      * `Operation`: `Send Message`\n      * `Chat ID`: `{{ $node[\"Telegram Trigger\"].json.chat.id }}`\n      * `Text`: `{{ $json.text }}`\n\nOnce you have configured all these fields, save your workflow and activate it. Your bot will then be live and ready to use.",
+        "height": 368,
+        "width": 464
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        -352
+      ],
+      "id": "e3cdc30e-0122-435e-a148-5488811f8649",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "37db1506-427b-4ff6-8c88-14e442452aaa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2696bd1fe2c6027f3e7c68d16d47ce408f61764f66dc6930166a2260d22062a6"
+  },
+  "id": "uah219TdXIDlqa3c",
+  "tags": []
+}
