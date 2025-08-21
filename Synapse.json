@@ -37,7 +37,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCjMxqWIBNepZFqjMnVJ1rlEhC0AE-B71U",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBNepZFqjMnVJ1rlEhC0AE-B71U",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"Analyze the attached resume. Extract the following information in a valid JSON object: \\\"candidateName\\\", \\\"emailAddress\\\", \\\"phoneNumber\\\", \\\"skills\\\" (as an array of the top 5-7 most relevant skills) and \\\"summary\\\" (a 3-sentence professional summary of their experience). If a field is not found, use 'N/A'. Respond ONLY with the JSON object.\"\n        },\n        {\n          \"inlineData\": {\n            \"mimeType\": \"{{ $('Gmail Trigger').first().binary.attachment_0.mimeType }}\",\n            \"data\": \"{{ $('Gmail Trigger').first().binary.attachment_0.data }}\"\n          }\n        }\n      ]\n    }\n  ]\n}",
@@ -60,14 +60,14 @@
           "value": "1S_EZn1PJByVKGTu5TqPUws_pERAZI0kTQTu76iwqHi8",
           "mode": "list",
           "cachedResultName": "create a automation for human resorce jujst like...",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1S_EZn1PJByVKGTu5TqPUws_pERAZI0kTQTu76iwqHi8/edit?usp=drivesdk"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1S_EZn1PJByVKGTu5TqPUws_pE8/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": 292977499,
           "mode": "list",
           "cachedResultName": "create a automation for human resorce jujst like...",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1S_EZn1PJByVKGTu5TqPUws_pERAZI0kTQTu76iwqHi8/edit#gid=292977499"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1S_EZn1PJByVKGTu5TqPUws_pwqHi8/edit#gid=292977499"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -240,7 +240,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCjMxqWIBNepZFqjMnVJ1rlEhC0AE-B71U",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCjMxqWIBhC0AE-B71U",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"You are an intelligent HR assistant responsible for data normalization. Your task is to correct and match a job title from a candidate's email to an official job title from our company's list.\\n\\n## INSTRUCTIONS:\\n1. Compare the CANDIDATE_TITLE with the OFFICIAL_TITLES list.\\n2. Account for common spelling mistakes, typos, or variations (e.g., 'Fluter devloper' should match 'Flutter Developer').\\n3. Your response must be ONLY the single, correctly spelled string from the OFFICIAL_TITLES list that is the best match.\\n4. If the CANDIDATE_TITLE is completely unrelated, respond with the exact string 'No Match Found'.\\n\\n## EXAMPLES:\\n\\n---\\n**Example 1:**\\nCANDIDATE_TITLE: \\\"Aplication for a sr nodejs dev\\\"\\nOFFICIAL_TITLES: ['Flutter Developer', 'Node.js Developer', 'Project Manager']\\nCORRECT_RESPONSE: Node.js Developer\\n---\\n**Example 2:**\\nCANDIDATE_TITLE: \\\"Inquiry about your invoices\\\"\\nOFFICIAL_TITLES: ['Flutter Developer', 'Node.js Developer', 'Project Manager']\\nCORRECT_RESPONSE: No Match Found\\n---\\n\\n## TASK:\\n\\nCANDIDATE_TITLE: \\\"{{ $('Extract Role from Subject').first().json.extractedRole }}\\\"\\nOFFICIAL_TITLES: [{{ $('Format Roles List').first().json.roleListString }}]\\nCORRECT_RESPONSE:\"\n        }\n      ]\n    }\n  ]\n}",
@@ -330,7 +330,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCjMxqWIBNepZFqjMnVJ1rlEhC0AE-B71U",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCjMxqWIBrlEhC0AE-B71U",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"You are an expert technical recruiter for a software company. Your task is to analyze a candidate's details against a specific job's requirements and provide a quantitative and qualitative analysis.\\n\\n## INSTRUCTIONS:\\n1. Carefully read the candidate's summary and their list of skills.\\n2. Compare this information against the required and nice-to-have skills for the job.\\n3. Consider not just exact keyword matches, but also related technologies and the context of their experience described in the summary. For example, if they mention building 'cross-platform apps', that is strong evidence for 'Flutter'.\\n4. Based on your expert analysis, provide a `matchScore` between 0 and 100.\\n5. Provide a brief, one-sentence `justification` explaining your score.\\n6. Your response MUST be a valid JSON object with ONLY two keys: \\\"matchScore\\\" (a number) and \\\"justification\\\" (a string).\\n\\n## CANDIDATE DETAILS:\\n**Summary:** {{ $('Clean JSON Code').first().json.summary }}\\n**Skills:** {{ $('Clean JSON Code').first().json.skills.join(', ') }}\\n\\n## JOB REQUIREMENTS:\\n**Required Skills:** {{ $('Find Correct Profile').first().json.RequiredSkills }}\\n**Nice-to-Have Skills:** {{ $('Find Correct Profile').first().json.NiceToHaveSkills }}\\n\\n## ANALYSIS:\\n\"\n        }\n      ]\n    }\n  ]\n}",
